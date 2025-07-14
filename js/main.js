@@ -1,5 +1,7 @@
 let h1 = document.querySelector("h1");
 
+let tbody = document.getElementById("meteoTable");
+
 fetch("https://api.open-meteo.com/v1/forecast?latitude=45.0705&longitude=7.6868&daily=weather_code,sunrise,rain_sum,wind_speed_10m_max&hourly=wind_speed_10m,soil_temperature_0cm,temperature_2m,weather_code&current=temperature_2m,precipitation,weather_code,wind_speed_10m&timeformat=unixtime")
     .then(res => res.json())
     .then(data => {
@@ -7,7 +9,7 @@ fetch("https://api.open-meteo.com/v1/forecast?latitude=45.0705&longitude=7.6868&
         console.log(data);
 
         let precipitazioni = data.current.precipitation;
-        
+
         let temperatura = data.current.temperature_2m;
 
         let vento = data.current.wind_speed_10m;
@@ -16,34 +18,97 @@ fetch("https://api.open-meteo.com/v1/forecast?latitude=45.0705&longitude=7.6868&
 
         h1.textContent = "Meteo Torino - Giornata " + dataAttuale;
 
-        const meteoAttuale = document.getElementById('meteoAttuale').getContext('2d');
+        // Riempio la tabella HTML
+        const rows = [
+            ["Precipitazioni", precipitazioni + " " + data.current_units.precipitation],
+            ["Temperatura", temperatura + " " + data.current_units.temperature_2m],
+            ["Vento", vento + " " + data.current_units.wind_speed_10m],
+        ];
 
-        new Chart(meteoAttuale, {
-            type: 'bar', // GRAFICO A BARRE tipo tabella
+        rows.forEach(row => {
+            let tr = document.createElement("tr");
+            row.forEach(cell => {
+                let td = document.createElement("td");
+                td.textContent = cell;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        // --------------------
+        // Grafico Giornaliero
+        // --------------------
+        const dailyLabels = data.daily.time.map(unix => {
+            let date = new Date(unix * 1000);
+            return date.toLocaleDateString('it-IT');
+        });
+
+        const dailyRain = data.daily.rain_sum;
+        const dailyWind = data.daily.wind_speed_10m_max;
+
+        new Chart(document.getElementById("dailyChart"), {
+            type: "line",
             data: {
-                labels: ['Precipitazioni', 'Temperatura', 'Vento'],
-                datasets: [{
-                    label: 'Valori attuali',
-                    data: [precipitazioni, temperatura, vento],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(255, 206, 86, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                labels: dailyLabels,
+                datasets: [
+                    {
+                        label: "Pioggia (mm)",
+                        data: dailyRain,
+                        borderColor: "rgba(54, 162, 235, 1)",
+                        backgroundColor: "rgba(54, 162, 235, 0.2)",
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: "Vento max (km/h)",
+                        data: dailyWind,
+                        borderColor: "rgba(255, 206, 86, 1)",
+                        backgroundColor: "rgba(255, 206, 86, 0.2)",
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
             },
             options: {
                 responsive: true,
-                indexAxis: 'x', // Se vuoi le barre orizzontali come tabella
                 scales: {
-                    x: {
+                    y: {
                         beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // --------------------
+        // Grafico Orario
+        // --------------------
+        const hourlyLabels = data.hourly.time.slice(0, 24).map(unix => {
+            let date = new Date(unix * 1000);
+            return date.getHours() + ":00";
+        });
+
+        const hourlyTemp = data.hourly.temperature_2m.slice(0, 24);
+
+        new Chart(document.getElementById("hourlyChart"), {
+            type: "line",
+            data: {
+                labels: hourlyLabels,
+                datasets: [
+                    {
+                        label: "Temperatura (°C)",
+                        data: hourlyTemp,
+                        borderColor: "rgba(255, 99, 132, 1)",
+                        backgroundColor: "rgba(255, 99, 132, 0.2)",
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false
                     }
                 }
             }

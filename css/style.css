@@ -1,4 +1,88 @@
-#meteoAttuale {
+#dailyChart, #hourlyChart {
     max-width: 500px;
-    max-height: 500px;
+    max-height: 200px;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f8fa;
+  color: #333;
+  margin: 20px;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+h2 {
+  text-align: center;
+  color: #34495e;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+
+/* 
+   --------------------
+   Stile Tabella
+   --------------------
+*/
+
+.tableContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+table {
+  width: 100%;
+  max-width: 600px;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table thead tr {
+  background-color: #3498db;
+  color: white;
+  text-align: left;
+  font-weight: 600;
+}
+
+table th, table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+table tbody tr:hover {
+  background-color: #f1faff;
+  cursor: default;
+}
+
+/* 
+   --------------------
+   Stile Grafici
+   --------------------
+*/
+
+canvas {
+  display: block;
+  max-width: 960px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.chartContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }

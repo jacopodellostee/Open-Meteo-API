@@ -1,16 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meteo Torino</title>
+    <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
-    <h1></h1>
-    <canvas id="meteoAttuale"></canvas>
     
+    <h1></h1>
+
+    <!-- Tabella per dati attuali -->
+    <div class="tableContainer">
+        <table border="1">
+
+            <thead>
+                <tr>
+                    <th>Parametro</th>
+                    <th>Valore</th>
+                </tr>
+            </thead>
+
+            <tbody id="meteoTable">
+            </tbody>
+
+        </table>
+    </div>
+
+    <!-- Grafico Giornaliero -->
+    <div class="chartContainer">
+
+        <h2>Previsioni Giornaliere</h2>
+        <canvas id="dailyChart"></canvas>
+
+        <!-- Grafico Orario -->
+        <h2>Previsioni Orarie</h2>
+        <canvas id="hourlyChart"></canvas>
+    </div>
+
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script defer src="./js/main.js"></script>
 </body>
+
 </html>
