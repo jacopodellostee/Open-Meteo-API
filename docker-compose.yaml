@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  meteo-app:
+    build: .
+    ports:
+      - "8080:80"
+    container_name: meteo-container
